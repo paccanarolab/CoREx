@@ -17,11 +17,11 @@ def hello_there(request):
 def interactome_explorer(request):
     return render(request, template_name='ppi-preamble.html')
 
-def red_HIPPIE(request, net='HIPPIE'):
+def HIPPIE(request, net='HIPPIE'):
     return render(request, template_name='viz.html', context={'net':net})
 
-def HURI(request):
-    return render(request, template_name='viz.html')
+def HURI(request, net='HURI'):
+    return render(request, template_name='viz.html', context={'net':net})
 
-def CHENG(request):
-    return render(request, template_name='viz.html')
+def CHENG(request, net='CHENG'):
+    return render(request, template_name='viz.html', context={'net':net})
