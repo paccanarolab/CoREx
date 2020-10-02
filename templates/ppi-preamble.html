@@ -1,0 +1,189 @@
+{% load static from staticfiles %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <title>CoREx - PaccanaroLab</title>
+
+    <!-- Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-12707805-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-12707805-4');
+    </script>
+</head>
+<body>
+    <div class="container-lg">
+        <div class="row">
+            <div id="header" class="col">
+                <a href="https://paccanarolab.org"><img id="paccanarolab_logo" src="{% static "images/PaccanaroLab.png" %}" alt=""/></a>
+                <a href="https://emap.fgv.br/"><img src="{% static "images/FGV-EMAp.png"%}" alt=""/></a>
+                <a href="https://royalholloway.ac.uk"><img src="{% static "images/RHUL.jpg" %}" alt=""/></a>
+            </div>
+        </div>
+        <hr class="row">
+        <div id="preamble" class="row">
+            <div class="col">
+
+                <h1>CoREx - Interactome Explorer</h1>
+                <h2>
+                    <a href="https://torresmateo.com">Mateo Torres</a>, 
+                    <a href="https://www.ime.usp.br/~suzana/">Suzana Santos</a>, 
+                    <a href="https://diegogalpy.github.io/">Diego Galeano</a>, 
+                    <a href="http://www.cs.rhul.ac.uk/home/alberto/">Alberto Paccanaro</a>
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 blog-main">
+                <div class="blog-post">
+                    <!-- <h4><a href="https://torresmateo.com">Mateo Torres</a></h4> -->
+                    <p>
+                        This is a very simple protein-protein network tool 
+                        designed to visualise network properties of SARS-CoV-2 host proteins
+                        in the interactome. 
+                    </p>
+                    <p>
+                        4 protein-protein networks are provided (see information below). Only the largest 
+                        connected component is included. 
+                    </p>
+                    <!-- <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2"> -->
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4 col-xl-4 py-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">HIPPIE</h5>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Weighted</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Proteins</td>
+                                                <td>250</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Links</td>
+                                                <td>653</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Density</td>
+                                                <td>2.1%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a class="btn btn-primary btn-block" href="hippie/HIPPIE" role="button">HIPPIE</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 col-xl-4 py-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">HuRI</h5>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Binary</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Proteins</td>
+                                                <td>31</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Links</td>
+                                                <td>45  </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Density</td>
+                                                <td>9.7%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a class="btn btn-primary btn-block" href="huri" role="button">HuRI</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 col-xl-4 py-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Cheng</h5>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Binary</td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Proteins</td>
+                                                <td>165</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Links</td>
+                                                <td>333</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Density</td>
+                                                <td>2.5%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a class="btn btn-primary btn-block" href="cheng" role="button">Cheng</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-6 col-lg-4 col-xl-3 py-2">                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">S2F</h5>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Weighted</td>
+                                                <td>✅</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Proteins</td>
+                                                <td>332</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Links</td>
+                                                <td>4953</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Density</td>
+                                                <td>9.0%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <a class="btn btn-primary btn-block" href="viz.html?net=S2F" role="button">S2F</a>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</body>
+</html>
