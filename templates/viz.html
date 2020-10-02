@@ -117,7 +117,6 @@
             var net = '{{ net }}';
             var network = document.getElementById('network');
             network.innerHTML=net;
-            alert(net);
             var graph_file = `{% static '/data/' %}${net.toLowerCase()}.json`;
             var interactive_properties = d3.select('#interactive_properties');
             var i = 0;
