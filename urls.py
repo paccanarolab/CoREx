@@ -9,5 +9,6 @@ urlpatterns = [
     url(r"hippie/(?P<net>\w+)/", views.HIPPIE, name="HIPPIE"),
     url(r"huri/(?P<net>\w+)/", views.HURI, name="HURI"),
     url(r"cheng/(?P<net>\w+)/", views.CHENG, name="CHENG"),
-    
+    url("prueba", views.prueba, name="prueba"),
+    url("test", views.test, name="test"),
 ]
