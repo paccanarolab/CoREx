@@ -196,7 +196,7 @@ def insert_kernels_files_names():
             Kernel_file_name(
                 protein_network = n_id,
                 kernel = k_id,
-                path = fields[2]
+                path = fields[2].strip()
             )
         )
     Kernel_file_name.objects.bulk_create(kf_relations)

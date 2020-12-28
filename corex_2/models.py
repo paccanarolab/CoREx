@@ -42,7 +42,6 @@ class Protein_network(models.Model):
     kernel_files = models.ManyToManyField(Kernel, through='Kernel_file_name')
     kernel_index = models.ManyToManyField(Protein, through='Kernel_Protein_index')
 
-
     def  __str__ ( self ): 
         return  self.name
 
@@ -50,6 +49,7 @@ class Kernel_file_name(models.Model):
     protein_network = models.ForeignKey(Protein_network)
     kernel = models.ForeignKey(Kernel)
     path = models.TextField(max_length=200)
+    host_protein_indices_path = models.TextField(max_length=200)
 
 class Kernel_Protein_index(models.Model):
     protein = models.ForeignKey(Protein)

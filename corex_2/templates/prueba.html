@@ -43,25 +43,28 @@
     <h1>CoREx - Customizable Explorer</h1>
     
     <br><br>
-    <div class="input-group", style="width: 400px">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-        </div>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="inputGroupFile01"
-            aria-describedby="inputGroupFileAddon01" accept=".txt" multiple=false>
-          <label class="custom-file-label" for="inputGroupFile01">...your protein file</label>
-        </div>
-    </div>
-    
-    <br><br>
-    <div class="form-group blue-border", style="width: 400px">
-        <label for="exampleFormControlTextarea4">One protein per line</label>
-        <textarea class="form-control" id="exampleFormControlTextarea4" rows="3"></textarea>
-    </div>
-
-    <form action="test" method="POST">
+    <form action="test" method="POST" enctype="multipart/form-data">
+        <!-- <div class="input-group", style="width: 400px">
+            <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+            </div>
+            <div class="custom-file">
+            <input type="file" class="custom-file-input" id="inputGroupFile01"
+                aria-describedby="inputGroupFileAddon01" accept=".txt" multiple=false>
+            <label class="custom-file-label" for="inputGroupFile01">...your protein file</label>
+            </div>
+        </div> -->
         {% csrf_token %}
+        {{ form }}
+        
+        <br><br>
+        <div class="form-group blue-border", style="width: 400px">
+            <label for="exampleFormControlTextarea4">One protein per line</label>
+            <textarea name="prot" class="form-control" id="exampleFormControlTextarea4" rows="3"></textarea>
+        </div>
+
+        <!-- <form action="test" method="POST"> -->
+        
         <div class="form-group", style="width: 400px">
             <label for="exampleFormControlSelect1">Kernel:</label>
             <select name="kernel" class="form-control" id="exampleFormControlSelect1">

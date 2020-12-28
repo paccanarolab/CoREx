@@ -3,6 +3,12 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from corex.models import *
+from .forms import UploadFileForm
+from files_handler import handle_uploaded_file, handle_text_area
+from django.http import HttpResponse
+from django.db.models import Max
+import json
+
 
 # Create your views here.
 
@@ -34,11 +40,72 @@ def prueba(request):
     network = Protein_network.objects.all()
     "get the kernels"
     kernel = Kernel.objects.all()
-    return render(request, template_name='prueba.html', context={'networks':network, 'kernels': kernel})
+    form = UploadFileForm()
+    return render(request, template_name='prueba.html', context={'networks':network, 'kernels': kernel, 'form': form})
+
+def get_network(network, proteins):
+    net = {}
+    net['directed'] = False
+    net['multigraph'] = False
+    net['graph'] = {}
+    net['nodes'] = list({'id': p, 'betweeness': 0} for p in proteins)
+    proteins_query = Protein.objects.filter(accession__in=proteins)
+    interactions = Interactions.objects.filter(protein_network=network)
+    interactions = interactions.filter(p1__in=proteins_query)
+    interactions = interactions.filter(p2__in=proteins_query).all()
+    net['links'] = list({'w': i.weight, 'source': i.p1.accession, 'target': i.p2.accession} for i in interactions)
+
+    return json.dumps(net)
 
 def test(request):
+    context = {}
     network=request.POST.get("network", None)
     kernel=request.POST.get("kernel", None)
-    #filter del network y del kernel.
-    return render(request, template_name='index.html', context={'network':network, 'kernel': kernel})
+
+    if request.method == "POST" and 'file' in request.FILES:
+        my_uploaded_file = request.FILES['file']
+        prots_in_file, prots_query = handle_uploaded_file(my_uploaded_file)
+        #return HttpResponse(status=201)
+    else:
+        print("not uploaded file")
+        proteins = request.POST.get("prot", None)
+        prots_in_file, prots_query = handle_text_area(proteins)
+
+
+    # if request.FILES['file']:
+    #     handle_uploaded_file(request.FILES['file'])
+    
+    #v = request.FILES['file'].read()
+    #print(v)
+    k_id = Kernel.objects.values_list('id', flat=True).get(kernel_name=kernel)
+    n_id = Protein_network.objects.values_list('id', flat=True).get(name=network)
+    kernel_filename = Kernel_file_name.objects.filter(kernel=k_id, protein_network=n_id).first()
+    
+    kernel_indices = Kernel_Protein_index.objects.filter(network=n_id).filter(protein__in=prots_query).all()
+    kernel_indices = np.array([i.index for i in kernel_indices])
+    print(kernel_indices)
+    max_index = Kernel_Protein_index.objects.filter(network=n_id).aggregate(Max('index'))
+    max_index = max_index['index__max']
+    print (max_index)
+
+    # target_vector = np.zeros(max_index)
+    # target_vector[kernel_indices] = 1
+    host_protein_names = np.array([i.strip() for i in open(kernel_filename.host_protein_indices_path.strip())])
+    print(host_protein_names, host_protein_names.shape)
+    kernel = np.load(kernel_filename.path.strip())
+    kernel_target = kernel[kernel_indices,:]
+    print(kernel_target.shape)
+    kernel_target_sum = kernel_target.sum(axis=0)
+    print(kernel_target_sum, kernel_target_sum.shape)
+
+    result_json = list({'protein': p, 'score': s} for p, s in zip(host_protein_names, kernel_target_sum))
+    result_json = json.dumps(result_json)
+
+    data = {}
+    data['k_id'] = kernel_filename
+    data['network'] = get_network(n_id, host_protein_names)
+    data['scores'] = result_json
+    
+
+    return render(request, template_name='viz.html', context=data)
 

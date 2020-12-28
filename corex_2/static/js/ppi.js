@@ -48,10 +48,11 @@ class PPI{
         this.radius = 10;
         
 
-        this.graph;
-        d3.json(graph_file)
-        .then(response => this.graph = response)
-        .then(() => this.draw());
+        this.graph = graph_file;
+        this.draw();
+        // d3.json(graph_file)
+        // .then(response => this.graph = response)
+        // .then(() => this.draw());
     }
     
     draw(){
