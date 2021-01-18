@@ -48,6 +48,9 @@
             .then(data => {
                 drugs = data;
                 var select_elem = d3.select('#drug-select');
+                select_elem.append('option')
+                .attr('value', 'User Selection')
+                .text('User Selection');
                 for(let s = 0; s < data.drugs.length; s++){
                     select_elem.append('option')
                     .attr('value', data.drugs[s])
@@ -121,7 +124,8 @@
                 var select_elem = document.getElementById('drug-select');
                 //console.log(select_elem.value);
                 //ppi_chart.load_drug_score(select_elem.value, `static/data/${select_elem.value}.json`);
-                ppi_chart.load_drug_score(select_elem.value, `{% static '/data/' %}${select_elem.value}.json`);
+                console.log(select_elem);
+                ppi_chart.load_drug_score(select_elem.value, `{% static 'data' %}/${select_elem.value}.json`);
 
                 //ppi_chart.update_chart(select_elem.value);
             }

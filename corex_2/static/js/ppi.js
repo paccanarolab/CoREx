@@ -120,7 +120,17 @@ class PPI{
     init_scores(){
         var max_score = drugs.max;
         this.color_domain = [0, max_score * 0.25, max_score * 0.5, max_score];
-        this.load_drug_score(this.interactive_property, `data/${this.interactive_property}.json`);
+        // this.load_drug_score(this.interactive_property, `/static/data/${this.interactive_property}.json`);
+        var score_name = this.interactive_property;
+        this.graph.nodes.map(d => {
+            var new_score = scores.filter(s => s.protein == d.id);
+            if(new_score.length > 0){
+                d[score_name] = new_score[0].score
+            }else{
+                d[score_name] = 0;
+            }
+        });
+        
     }
 
     set_scores(score_name, scores, default_score='min'){
@@ -146,7 +156,7 @@ class PPI{
     }
 
     load_drug_score(score_name, scores_file){
-        console.log('checking for ', score_name);
+        console.log('checking for ', score_name, scores_file);
         if(score_name in this.graph.nodes[0]){
             this.update_chart(score_name);
         } else {
