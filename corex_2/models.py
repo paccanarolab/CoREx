@@ -55,6 +55,7 @@ class Kernel_Protein_index(models.Model):
     protein = models.ForeignKey(Protein)
     network = models.ForeignKey(Protein_network)
     index = models.IntegerField()
+    is_lcc = models.BooleanField(default=False)
 
 class Interactions(models.Model):
     weight = models.FloatField()

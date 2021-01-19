@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from corex.models import *
 import os
+import networkx as nx
 
 def insert_drugs():
     ruta = '/Corex/data_for_corex/drug_info2.tab'
@@ -222,6 +223,29 @@ def insert_protein_kernel_index(file_name, k):
 
     Kernel_Protein_index.objects.bulk_create(pk_relations)
 
+def update_lcc():
+    #1. Iterate over networks
+    pn = Protein_network.objects.all()
+    for n_id in pn:
+        print('Getting network', n_id)
+        k = Kernel_Protein_index.objects.filter(network=n_id).all()
+        k = [i.protein.id for i in k]
+        print('Getting interactions')
+        k = Protein.objects.filter(id__in=k, host_protein=True)
+        interactions = Interactions.objects.filter(protein_network=n_id).filter(p1__in=k).filter(p2__in=k).all()
+        print('Got interactions')
+        #2. Create networkx
+        edges = [[i.p1.id, i.p2.id] for i in interactions]
+        print(edges[:10])
+        G = nx.Graph(edges)
+        #3. Extract lcc
+        print('Extracting lcc')
+        largest_cc = max(nx.connected_components(G), key=len)
+        print('First node', len(largest_cc))
+        #4. Update the table
+        print('Updating')
+        Kernel_Protein_index.objects.filter(protein__in=largest_cc).update(is_lcc=True)
+
 
 class Command(BaseCommand):
     help = 'Insert data'
@@ -237,7 +261,8 @@ class Command(BaseCommand):
         #insert_Cheng_interactions()
         #insert_drug_targets()
         #insert_kernels_files_names()
-        print('Inserting Barabasi')
+        # print('Inserting Barabasi')
         #insert_protein_kernel_index('/Corex/data_for_corex/precomputed-kernels/proteins_Barabasi.txt', 'Cheng')
-        print('Inserting HuRI')
+        # print('Inserting HuRI')
         #insert_protein_kernel_index('/Corex/data_for_corex/precomputed-kernels/proteins_HuRI.txt', 'HuRI')
+        update_lcc()

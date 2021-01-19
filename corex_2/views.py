@@ -48,11 +48,13 @@ def get_network(network, proteins):
     net['directed'] = False
     net['multigraph'] = False
     net['graph'] = {}
-    net['nodes'] = list({'id': p, 'betweeness': 0} for p in proteins)
+    k = Kernel_Protein_index.objects.filter(network=network, is_lcc=True).all()
+    proteins = list(set(proteins) & set([i.protein.accession for i in k]))
     proteins_query = Protein.objects.filter(accession__in=proteins)
     interactions = Interactions.objects.filter(protein_network=network)
     interactions = interactions.filter(p1__in=proteins_query)
     interactions = interactions.filter(p2__in=proteins_query).all()
+    net['nodes'] = list({'id': p, 'betweeness': 0} for p in proteins)
     net['links'] = list({'w': i.weight, 'source': i.p1.accession, 'target': i.p2.accession} for i in interactions)
 
     return json.dumps(net)
