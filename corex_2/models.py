@@ -65,3 +65,12 @@ class Interactions(models.Model):
     
     def  __str__ ( self ): 
         return  self.protein_network
+
+#Last added
+class DrugScore(models.Model):
+    drug = models.ForeignKey(Drug)
+    network = models.ForeignKey(Protein_network)
+    kernel = models.ForeignKey(Kernel)
+    protein = models.ForeignKey(Protein)
+    score = models.FloatField()
+

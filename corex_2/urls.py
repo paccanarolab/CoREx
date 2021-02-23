@@ -11,4 +11,6 @@ urlpatterns = [
     url(r"cheng/(?P<net>\w+)/", views.CHENG, name="CHENG"),
     url("prueba", views.prueba, name="prueba"),
     url("test", views.test, name="test"),
+    url(r"drugs/(?P<net>\d+)/(?P<kernel>\d+)/", views.get_drugs, name="drugs"),
+    url(r"drug/(?P<net>\d+)/(?P<kernel>\d+)/(?P<drug>\d+)/", views.get_drugs_scores, name="drug")
 ]

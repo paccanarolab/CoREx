@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand, CommandError
 from corex.models import *
 import os
 import networkx as nx
+import numpy as np
+from django.db.models import Max
 
 def insert_drugs():
     ruta = '/Corex/data_for_corex/drug_info2.tab'
@@ -235,7 +237,10 @@ def update_lcc():
         interactions = Interactions.objects.filter(protein_network=n_id).filter(p1__in=k).filter(p2__in=k).all()
         print('Got interactions')
         #2. Create networkx
-        edges = [[i.p1.id, i.p2.id] for i in interactions]
+        edges = []
+        for i in interactions:
+            if i.p1.id != i.p2.id:
+                edges.append([i.p1.id, i.p2.id])
         print(edges[:10])
         G = nx.Graph(edges)
         #3. Extract lcc
@@ -244,7 +249,51 @@ def update_lcc():
         print('First node', len(largest_cc))
         #4. Update the table
         print('Updating')
-        Kernel_Protein_index.objects.filter(protein__in=largest_cc).update(is_lcc=True)
+        Kernel_Protein_index.objects.filter(protein__in=largest_cc, network=n_id).update(is_lcc=True)
+
+def insert_drug_scores():
+    drugs = Drug.objects.all()
+    networks = Protein_network.objects.all()
+    kernels = Kernel.objects.all()
+    for drug in drugs:
+        drug_scores = []
+        print('Processing:', drug.name)
+        proteins = [p for p in drug.targets.all()]
+        for network in networks:
+            for kernel in kernels:
+                # calculate score
+                kernel_filename = Kernel_file_name.objects.filter(kernel=kernel, protein_network=network).first()
+    
+                kernel_indices = Kernel_Protein_index.objects.filter(network=network).filter(protein__in=proteins).all()
+                kernel_idx = np.array([i.index for i in kernel_indices])
+                if len(kernel_idx) == 0:
+                    continue
+                max_index = Kernel_Protein_index.objects.filter(network=network).aggregate(Max('index'))
+                max_index = max_index['index__max']
+
+                host_protein_names = np.array([i.strip() for i in open(kernel_filename.host_protein_indices_path.strip())])
+                protein_order = []
+                for protein in host_protein_names:
+                    protein_order.append(Protein.objects.filter(accession=protein).first())
+                k = np.load(kernel_filename.path.strip())
+                # print(kernel_idx)
+                kernel_target = k[kernel_idx,:]
+                kernel_target_sum = kernel_target.sum(axis=0)
+                # print(kernel_target_sum, kernel_target_sum.shape)
+
+
+                drug_scores += [
+                    DrugScore(
+                        kernel = kernel,
+                        drug = drug,
+                        network = network,
+                        protein = p,
+                        score = s
+                    ) for p,s in zip(protein_order, kernel_target_sum)
+                ]
+
+        DrugScore.objects.bulk_create(drug_scores)
+
 
 
 class Command(BaseCommand):
@@ -265,4 +314,5 @@ class Command(BaseCommand):
         #insert_protein_kernel_index('/Corex/data_for_corex/precomputed-kernels/proteins_Barabasi.txt', 'Cheng')
         # print('Inserting HuRI')
         #insert_protein_kernel_index('/Corex/data_for_corex/precomputed-kernels/proteins_HuRI.txt', 'HuRI')
-        update_lcc()
+        # update_lcc()
+        # insert_drug_scores()

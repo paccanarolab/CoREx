@@ -1,6 +1,7 @@
 import os
 import tempfile
 from corex.models import Protein
+from django.http import HttpResponse
 
 def handle_uploaded_file(uploaded_file):
     lista = []
@@ -20,6 +21,10 @@ def handle_uploaded_file(uploaded_file):
     # print ("Not in the list:", lista2)
 
     data2 = Protein.objects.filter(accession__in=lista)
+
+    if not data2:
+        print('aqui')
+        return HttpResponse(status=404)
 
     tmp.close()
     # lista2 = [e.accession for e in data2]
@@ -73,6 +78,9 @@ def handle_text_area(text_area):
     # print ("Not in the list:", lista2)
 
     data2 = Protein.objects.filter(accession__in=lista)
+    if not data2:
+        print('aqu2i')
+        return 0, 0
 
     # for e in data2:
     #     print(e.id)

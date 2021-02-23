@@ -8,6 +8,7 @@ from files_handler import handle_uploaded_file, handle_text_area
 from django.http import HttpResponse
 from django.db.models import Max
 import json
+from django.db.models import *
 
 
 # Create your views here.
@@ -71,7 +72,13 @@ def test(request):
     else:
         print("not uploaded file")
         proteins = request.POST.get("prot", None)
-        prots_in_file, prots_query = handle_text_area(proteins)
+        if proteins:
+            prots_in_file, prots_query = handle_text_area(proteins)
+            print(prots_in_file, prots_query)
+            if prots_in_file == 0 and prots_query == 0:
+                return HttpResponse(status=404)
+        else:
+            return HttpResponse(status=404)
 
 
     # if request.FILES['file']:
@@ -104,10 +111,39 @@ def test(request):
     result_json = json.dumps(result_json)
 
     data = {}
-    data['k_id'] = kernel_filename
+    data['k_id'] = k_id
     data['network'] = get_network(n_id, host_protein_names)
     data['scores'] = result_json
+    data['n_id'] = n_id
+
+    print(k_id, n_id)
     
 
     return render(request, template_name='viz.html', context=data)
 
+def get_drugs(request, net, kernel):
+    print(net, kernel)
+    mimetype = 'application/json'
+    k = Kernel.objects.filter(id=int(kernel)).first()
+    n = Protein_network.objects.filter(id=int(net)).first()
+    drug_sqs = DrugScore.objects.filter(kernel=k, network=n)
+    max_score = drug_sqs.values('drug').annotate(score_sum=Sum('score')).aggregate(Max('score_sum'))
+    data = {}
+    drug_qs = Drug.objects.filter(id__in=[x['drug'] for x in drug_sqs.values('drug').distinct()])
+    # print(drug_qs)
+    data['drugs'] = [{'id': d.id, 'name': d.drug_bank_id + ' - ' + d.name} for d in drug_qs]
+    data['max'] = max_score['score_sum__max']
+    data = json.dumps(data)
+    print('aqui', data)
+    return HttpResponse(data, mimetype)
+
+def get_drugs_scores(request, net, kernel, drug):
+    print(net, kernel)
+    mimetype = 'application/json'
+    k = Kernel.objects.filter(id=int(kernel)).first()
+    n = Protein_network.objects.filter(id=int(net)).first()
+    d = Drug.objects.filter(id=int(drug)).first()
+    drug_sqs = DrugScore.objects.filter(kernel=k, network=n, drug=d)
+    data = [{'protein': dr.protein.accession, 'score': dr.score} for dr in drug_sqs]
+    data = json.dumps(data)
+    return HttpResponse(data, mimetype)

@@ -43,7 +43,7 @@
             var scores = JSON.parse('{{scores | escapejs}}');
             var drugs = null;
             var ppi_chart = null;
-            fetch("{%static 'data/drugs.json'%}")
+            fetch("{% url 'drugs' n_id k_id %}")
             .then(response => response.json())
             .then(data => {
                 drugs = data;
@@ -53,8 +53,8 @@
                 .text('User Selection');
                 for(let s = 0; s < data.drugs.length; s++){
                     select_elem.append('option')
-                    .attr('value', data.drugs[s])
-                    .text(data.drugs[s]);
+                    .attr('value', data.drugs[s].id)
+                    .text(data.drugs[s].name);
                 }
                 ppi_chart = new PPI('#graph', graph_file, 'drug-select');
             });
@@ -63,6 +63,7 @@
             // var net = '{{ net }}';
             // var network = document.getElementById('network');
             // network.innerHTML=net;
+            
             var graph_file = JSON.parse('{{network | escapejs}}');
             var interactive_properties = d3.select('#interactive_properties');
             var i = 0;
@@ -125,7 +126,10 @@
                 //console.log(select_elem.value);
                 //ppi_chart.load_drug_score(select_elem.value, `static/data/${select_elem.value}.json`);
                 console.log(select_elem);
-                ppi_chart.load_drug_score(select_elem.value, `{% static 'data' %}/${select_elem.value}.json`);
+
+                var url = "{% url 'drug' n_id k_id 12345 %}";
+                url = url.replace('12345', select_elem.value);
+                ppi_chart.load_drug_score(select_elem.value, url);
 
                 //ppi_chart.update_chart(select_elem.value);
             }
