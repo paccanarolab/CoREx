@@ -92,10 +92,10 @@ def test(request):
     
     kernel_indices = Kernel_Protein_index.objects.filter(network=n_id).filter(protein__in=prots_query).all()
     kernel_indices = np.array([i.index for i in kernel_indices])
-    print(kernel_indices)
+    # print(kernel_indices)
     max_index = Kernel_Protein_index.objects.filter(network=n_id).aggregate(Max('index'))
     max_index = max_index['index__max']
-    print (max_index)
+    # print (max_index)
 
     # target_vector = np.zeros(max_index)
     # target_vector[kernel_indices] = 1
@@ -127,14 +127,15 @@ def get_drugs(request, net, kernel):
     k = Kernel.objects.filter(id=int(kernel)).first()
     n = Protein_network.objects.filter(id=int(net)).first()
     drug_sqs = DrugScore.objects.filter(kernel=k, network=n)
-    max_score = drug_sqs.values('drug').annotate(score_sum=Sum('score')).aggregate(Max('score_sum'))
+    scoresbydrug = drug_sqs.values('drug').annotate(score_sum=Sum('score'))
+    scoresbydrug = {i['drug']:i['score_sum'] for i in scoresbydrug}
+    max_score = drug_sqs.values('drug').aggregate(Max('score'))
     data = {}
     drug_qs = Drug.objects.filter(id__in=[x['drug'] for x in drug_sqs.values('drug').distinct()])
     # print(drug_qs)
-    data['drugs'] = [{'id': d.id, 'name': d.drug_bank_id + ' - ' + d.name} for d in drug_qs]
-    data['max'] = max_score['score_sum__max']
+    data['drugs'] = [{'id': d.id, 'name': d.drug_bank_id + ' - ' + d.name, 'score': scoresbydrug[d.id]} for d in drug_qs]
+    data['max'] = max_score['score__max']
     data = json.dumps(data)
-    print('aqui', data)
     return HttpResponse(data, mimetype)
 
 def get_drugs_scores(request, net, kernel, drug):

@@ -47,14 +47,17 @@
             .then(response => response.json())
             .then(data => {
                 drugs = data;
+                console.log(drugs);
+                sorted_drugs = data.drugs.sort((a,b) => b.score - a.score);
+                console.log(sorted_drugs);
                 var select_elem = d3.select('#drug-select');
                 select_elem.append('option')
                 .attr('value', 'User Selection')
                 .text('User Selection');
-                for(let s = 0; s < data.drugs.length; s++){
+                for(let s = 0; s < sorted_drugs.length; s++){
                     select_elem.append('option')
-                    .attr('value', data.drugs[s].id)
-                    .text(data.drugs[s].name);
+                    .attr('value', sorted_drugs[s].id)
+                    .text(sorted_drugs[s].name);
                 }
                 ppi_chart = new PPI('#graph', graph_file, 'drug-select');
             });
