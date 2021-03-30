@@ -7,6 +7,7 @@ urlpatterns = [
     url("hello", views.home, name="home"),
     url("interactome", views.interactome_explorer, name="interactome_explorer"),
     url("functional", views.functional, name="functional"),
+    url(r"functional/(?P<drug>w+)", views.functional_detail, name="functional_detail"),
     url(r"hippie/(?P<net>\w+)/", views.HIPPIE, name="HIPPIE"),
     url(r"huri/(?P<net>\w+)/", views.HURI, name="HURI"),
     url(r"cheng/(?P<net>\w+)/", views.CHENG, name="CHENG"),

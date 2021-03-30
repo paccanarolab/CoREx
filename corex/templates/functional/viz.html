@@ -44,8 +44,8 @@
         
         <script>
             var queryVars = new URLSearchParams(window.location.search);
-            var drug = queryVars.get('drug');
-            var net = queryVars.get('net');
+            var drug = "{{ drug }}";
+            var net = "{{ net }}";
 
             var drug_info = document.getElementById('drugbank_id');
             drug_info.innerHTML=drug;
@@ -55,7 +55,7 @@
 
             var complexData;
             var container = document.getElementById('container');
-            fetch(`data/clusterviz-${net}-${drug}.json`)
+            fetch("{{ information_url }}")
             .then(response => response.json())
             .then(data => complexData=data.sort((a,b) => {
                     var covid_a = a.proteins.filter(p => p.is_covid);

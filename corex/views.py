@@ -6,6 +6,7 @@ from corex.models import *
 from .forms import UploadFileForm
 from files_handler import handle_uploaded_file, handle_text_area
 from django.http import HttpResponse
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.db.models import Max
 import json
 from django.db.models import *
@@ -26,6 +27,13 @@ def hello_there(request):
 
 def functional(request):
     return render(request, template_name='functional/index.html')
+
+def functional_detail(request, drug):
+    context = {}
+    context['information_url'] = static('functional/data/clusterviz-S2F-{drug}.json'.format(drug=drug))
+    context['drug'] = drug
+    context['net'] = 'S2F'
+    return render(request, template_name='functional/viz.html', context=context)
 
 def HIPPIE(request, net='HIPPIE'):
     return render(request, template_name='viz.html', context={'net':net})
