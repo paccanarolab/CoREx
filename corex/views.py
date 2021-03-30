@@ -22,7 +22,7 @@ def home(request):
     return render(request, template_name='index.html')
 
 def hello_there(request):
-    return redirect('https://paccanarolab.org/static_content/covid/')
+    # return redirect('https://paccanarolab.org/static_content/covid/')
     return render(request, template_name='index.html')
 
 def functional(request):
