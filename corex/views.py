@@ -18,15 +18,14 @@ from django.http import HttpResponse
 import numpy as np
 
 def home(request):
-    return HttpResponse("Hello, Django!")
+    return render(request, template_name='index.html')
 
 def hello_there(request):
     return redirect('https://paccanarolab.org/static_content/covid/')
     return render(request, template_name='index.html')
 
-def interactome_explorer(request):
-    x = np.load(r'/Corex/data_for_corex/precomputed-kernels/filtered_kernels/graph_kernel_Barabasi_diffusionKernel.npy')
-    return render(request, template_name='ppi-preamble.html', context={'shape': x.shape})
+def functional(request):
+    return render(request, template_name='functional/index.html')
 
 def HIPPIE(request, net='HIPPIE'):
     return render(request, template_name='viz.html', context={'net':net})
@@ -37,7 +36,7 @@ def HURI(request, net='HURI'):
 def CHENG(request, net='CHENG'):
     return render(request, template_name='viz.html', context={'net':net})
 
-def prueba(request):
+def interactome_explorer(request):
     "get the networks"
     network = Protein_network.objects.all()
     "get the kernels"
@@ -101,12 +100,12 @@ def test(request):
     # target_vector = np.zeros(max_index)
     # target_vector[kernel_indices] = 1
     host_protein_names = np.array([i.strip() for i in open(kernel_filename.host_protein_indices_path.strip())])
-    print(host_protein_names, host_protein_names.shape)
+    # print(host_protein_names, host_protein_names.shape)
     kernel = np.load(kernel_filename.path.strip())
     kernel_target = kernel[kernel_indices,:]
-    print(kernel_target.shape)
+    # print(kernel_target.shape)
     kernel_target_sum = kernel_target.sum(axis=0)
-    print(kernel_target_sum, kernel_target_sum.shape)
+    # print(kernel_target_sum, kernel_target_sum.shape)
 
     result_json = list({'protein': p, 'score': s} for p, s in zip(host_protein_names, kernel_target_sum))
     result_json = json.dumps(result_json)
@@ -117,13 +116,13 @@ def test(request):
     data['scores'] = result_json
     data['n_id'] = n_id
 
-    print(k_id, n_id)
+    # print(k_id, n_id)
     
 
     return render(request, template_name='viz.html', context=data)
 
 def get_drugs(request, net, kernel):
-    print(net, kernel)
+    # print(net, kernel)
     mimetype = 'application/json'
     k = Kernel.objects.filter(id=int(kernel)).first()
     n = Protein_network.objects.filter(id=int(net)).first()
