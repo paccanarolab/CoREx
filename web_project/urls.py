@@ -20,8 +20,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #admin.autodiscover()
 
 urlpatterns = [
+    url(r'^', include("corex.urls")),
     url(r'^admin/', admin.site.urls),
-    url(r'^corex/', include("corex.urls")),
 ]
 
 

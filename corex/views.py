@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from corex.models import *
 from .forms import UploadFileForm
 from files_handler import handle_uploaded_file, handle_text_area
@@ -21,6 +21,7 @@ def home(request):
     return HttpResponse("Hello, Django!")
 
 def hello_there(request):
+    return redirect('https://paccanarolab.org/static_content/covid/')
     return render(request, template_name='index.html')
 
 def interactome_explorer(request):

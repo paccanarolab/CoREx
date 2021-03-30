@@ -14,13 +14,23 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONF_DIR = os.path.join(BASE_DIR, 'web_project')
 
+def read_conf(filename):
+    configuration = {}
+    for line in open(filename):
+        if line.startswith('#'):
+            continue
+        key, value = line.strip().split()
+        configuration[key] = value
+    return configuration
 
+config = read_conf(os.path.join(CONF_DIR, 'configuration.server'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ujop=589l6fc_frvila&xeofn7vaxud6pxy*ohn2vjf1v7hl5z'
+SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -74,16 +84,28 @@ WSGI_APPLICATION = 'web_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'corex',
+#        'USER': 'postgres',
+#        'PASSWORD': 'marimar',
+#        'HOST': '127.0.0.1',
+#        'PORT': '5432',
+#    }
+#}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'corex',
-        'USER': 'postgres',
-        'PASSWORD': 'marimar',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': config['NAME'],
+        'USER': config['USER'],
+        'PASSWORD': config['PASSWORD'],
+        'HOST': config['HOST'],
     }
 }
+
+
 
 
 # Password validation
@@ -124,4 +146,5 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
+STATIC_URL = '/corex/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
