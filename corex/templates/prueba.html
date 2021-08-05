@@ -42,7 +42,6 @@
     
     <h1>CoREx - Customizable Explorer</h1>
     
-    <br><br>
     <form action="test" method="POST" enctype="multipart/form-data">
         <!-- <div class="input-group", style="width: 400px">
             <div class="input-group-prepend">
@@ -55,16 +54,23 @@
             </div>
         </div> -->
         {% csrf_token %}
+        <p>You may upload a list of protein targets for a drug, and observe its behaviour in the COVID-19 disease module.</p>
+
+        <p>The drug, defined by its molecular targets, will be placed alongside the drugs that we have previously analysed, and you will be able to compare the strength of this effect.</p>
+        
+        <div class="form-group blue-border", style="width: 400px">
+            <label for="protein-textarea">One protein per line</label>
+            <textarea name="prot" class="form-control" id="protein-textarea" rows="3"></textarea>
+        </div>
+        <button id="load-example" type="button" class="btn btn-primary">Load Example</button>
+
+        <br><br>
+        <p>Or, submit a file containing one UniProt accession number per line:</p>
+
         {{ form }}
         
-        <br><br>
-        <div class="form-group blue-border", style="width: 400px">
-            <label for="exampleFormControlTextarea4">One protein per line</label>
-            <textarea name="prot" class="form-control" id="exampleFormControlTextarea4" rows="3"></textarea>
-        </div>
-
         <!-- <form action="test" method="POST"> -->
-        
+        Select the Kernel that 
         <div class="form-group", style="width: 400px">
             <label for="exampleFormControlSelect1">Kernel:</label>
             <select name="kernel" class="form-control" id="exampleFormControlSelect1">
@@ -81,10 +87,15 @@
         </div>
 
         {% for n in networks%}
-        <input type="radio" id="{{n.name}}" name="network" value="{{n.name}}">
+        <input type="radio" id="{{n.name}}" name="network" value="{{n.name}}" {% if forloop.last %}checked{% endif %}>
         <label for="{{n.name}}">{{n.name}}</label> &nbsp;&nbsp;
         {% endfor %}
         <input type="submit" value="Send">
     </form>
-
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script>
+        d3.select('#load-example').on('click', function(){
+            d3.select('#protein-textarea').html("P07333\nP36888\nP10721\nP16234\nP09619\nP35916\nP35968\nP17948")
+        })
+    </script>
 </body>

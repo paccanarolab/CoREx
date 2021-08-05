@@ -1,11 +1,3 @@
-.blue-border textarea {
-  border: 1px solid #7a68c8;
-}
-.blue-border .form-control:focus {
-  border: 1px solid #7a68c8;
-  box-shadow: 0 0 0 0.2rem rgba(104, 181, 200, 0.25);
-}
-
 .container_uploadbox {
   width: 100%;
   max-width: 680px;
@@ -344,6 +336,50 @@ body {
 
 #preamble li {
   padding-top: 8px;
+}
+
+.drug-rank, .drug-score, .drug-name {
+  display: inline-block;
+}
+
+.drug-rank {
+  width: 5ch;
+  text-align: right;
+  padding-right: 0.5ch;
+}
+
+.drug-score {
+  width: 8ch;
+  border-left: solid 1px #ccc;
+  border-right: solid 1px #ccc;
+  text-align: right;
+  padding-right: 0.5ch;
+  padding-left: 0.5ch;
+}
+
+.drug-name {
+  padding-left: 0.5ch;
+}
+
+.ranking-element {
+  overflow-x: hidden;
+}
+.ranking-element:hover {
+  background-color: #ff6d6d;
+}
+
+.user-selection, .user-selection-ref {
+  background-color: #23CB87;
+}
+
+.active-drug, .active-drug-ref {
+  background-color: gold;
+}
+
+#ranking-buttons {
+  font-size: 0.7em;
+  max-height: 90vh;
+  overflow-x: hidden;
 }
 
 /*# sourceMappingURL=style.css.map */

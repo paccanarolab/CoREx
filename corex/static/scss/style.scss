@@ -123,3 +123,50 @@ background-color: #dfd;
 #preamble li{
     padding-top:8px;
 }
+
+.drug-rank, .drug-score, .drug-name{
+    display: inline-block;
+}
+
+.drug-rank{
+    width: 5ch;
+    // background-color: green;
+    text-align: right;
+    padding-right: 0.5ch;
+}
+
+.drug-score{
+    width: 8ch;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    text-align: right;
+    padding-right: 0.5ch;
+    padding-left: 0.5ch;
+}
+
+.drug-name{
+    padding-left: 0.5ch;
+}
+
+.ranking-element{
+    overflow-x: hidden;
+    &:hover{
+        background-color: rgb(255, 109, 109);
+    }
+}
+
+.user-selection, .user-selection-ref{
+    background-color: #23CB87;
+}
+
+.active-drug, .active-drug-ref{
+    background-color: gold;
+}
+
+#ranking-buttons {
+    font-size: 0.7em;
+    max-height: 90vh;
+    overflow-x: hidden;
+    // background-color: #c2e269;
+}
+

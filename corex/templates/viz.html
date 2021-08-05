@@ -14,16 +14,25 @@
     <body>
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md col-lg-8 blog-main">
+                <div class="col-md-7 col-lg-7 blog-main">
                     <div class="blog-post">
                         <h2 id="network"></h2>
                         <!-- <h4><a href="https://torresmateo.com">Mateo Torres</a></h4> -->
                         <div id="graph"></div>
-                        <div class="input-group">
+                        <p>Click on a drug in the list to visualize its effect on the COVID-19 disease module.</p>
+                        <p>The currently selected drug will be highlighted in <span class='active-drug-ref'>yellow</span>. 
+                           You selection will be highligthed in <span class='user-selection-ref'>green</span> (unless it's the selected drug).</p>
+                        <p>The graph above is interactive, and you can use it to identify the proteins under greater influence. Desktop browsers recommended.</p>
+    
+                        <!-- <div class="input-group">
                             <select class="custom-select" id="drug-select">
                             </select>
-                        </div>
+                        </div> -->
                     </div>
+                </div>
+                <div id="ranking-container" class="col-md-5">
+                    <h2>Drug Ranking</h2>
+                    <div id="ranking-buttons"></div>
                 </div>
             </div>
         </div>
@@ -39,25 +48,80 @@
         <script src="{% static 'js/papaparse.min.js' %}"></script>
         <script src="{% static 'js/ppi.js' %}"></script>
         <script>
+
+            var load_score = function(){
+                var select_elem = document.getElementById('drug-select');
+                //console.log(select_elem.value);
+                //ppi_chart.load_drug_score(select_elem.value, `static/data/${select_elem.value}.json`);
+                console.log(select_elem);
+
+                var url = "{% url 'drug' n_id k_id 12345 %}";
+                url = url.replace('12345', select_elem.value);
+                ppi_chart.load_drug_score(select_elem.value, url);
+
+                //ppi_chart.update_chart(select_elem.value);
+            };
+
+            var load_score_button = function(){
+                d3.selectAll('.active-drug')
+                    .classed('active-drug', false);
+                elem = d3.select(this);
+                elem.classed('active-drug', true);
+                var url = "{% url 'drug' n_id k_id 12345 %}";
+                var ID = elem.attr('value')
+                url = url.replace('12345', ID);
+                // console.log(ID);
+                ppi_chart.load_drug_score(ID, url);
+                // console.log(elem);
+                // elem.attr('class', 'asd');
+            };
+
             //var files = $('#files')[0].files;
             var scores = JSON.parse('{{scores | escapejs}}');
+            var selection_score = d3.sum(scores.map(d => d.score));
             var drugs = null;
             var ppi_chart = null;
             fetch("{% url 'drugs' n_id k_id %}")
             .then(response => response.json())
             .then(data => {
                 drugs = data;
-                console.log(drugs);
+                drugs.drugs.push({
+                    id: -1,
+                    name: "Your Proteins",
+                    score: selection_score
+                });
+                //console.log(drugs);
                 sorted_drugs = data.drugs.sort((a,b) => b.score - a.score);
-                console.log(sorted_drugs);
-                var select_elem = d3.select('#drug-select');
-                select_elem.append('option')
-                .attr('value', 'User Selection')
-                .text('User Selection');
+                //console.log(sorted_drugs);
+                //var select_elem = d3.select('#drug-select');
+                var buttom_elem = d3.select('#ranking-buttons');
+                // select_elem.append('option')
+                // .attr('value', 'Your Proteins')
+                // .text('Your Proteins');
                 for(let s = 0; s < sorted_drugs.length; s++){
-                    select_elem.append('option')
-                    .attr('value', sorted_drugs[s].id)
-                    .text(sorted_drugs[s].name);
+                    // select_elem.append('option')
+                    // .attr('value', sorted_drugs[s].id)
+                    // .text(sorted_drugs[s].name);
+
+                    var rank_elem = buttom_elem.append('div')
+                    .attr('class', 'ranking-element')
+                    .attr('value', sorted_drugs[s].id);
+                    
+                    rank_elem
+                        .classed('active-drug', sorted_drugs[s].id == -1);
+                    rank_elem
+                        .classed('user-selection', sorted_drugs[s].id == -1);
+
+                    rank_elem.append('div')
+                        .attr('class', 'drug-rank')
+                        .text(s + 1);
+                    rank_elem.append('div')
+                        .attr('class', 'drug-score')
+                        .text(sorted_drugs[s].score.toFixed(2));
+                    rank_elem.append('div')
+                        .attr('class', 'drug-name')
+                        .text(sorted_drugs[s].name);
+                    rank_elem.on('click', load_score_button);
                 }
                 ppi_chart = new PPI('#graph', graph_file, 'drug-select');
             });
@@ -124,21 +188,10 @@
                 }
             });
 
-            var load_score = function(){
-                var select_elem = document.getElementById('drug-select');
-                //console.log(select_elem.value);
-                //ppi_chart.load_drug_score(select_elem.value, `static/data/${select_elem.value}.json`);
-                console.log(select_elem);
-
-                var url = "{% url 'drug' n_id k_id 12345 %}";
-                url = url.replace('12345', select_elem.value);
-                ppi_chart.load_drug_score(select_elem.value, url);
-
-                //ppi_chart.update_chart(select_elem.value);
-            }
+            
 
             d3.select('#drug-select').on('change', load_score);
-
+            
             //update_radio();
 
         </script>

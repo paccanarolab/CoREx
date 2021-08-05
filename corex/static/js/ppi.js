@@ -29,9 +29,8 @@ function getRandomArbitrary(min, max) {
 }
 
 class PPI{
-    constructor(container, graph_file, select_id){
+    constructor(container, graph_file){
         this.container = d3.select(`${container}`);
-        this.select_elem = d3.select(`#${select_id}`);
         this.margin = {top: 10, right: 10, bottom: 30, left: 25};
         this.width = 900 - this.margin.left - this.margin.right;
         this.height = 900 - this.margin.top - this.margin.bottom;
@@ -69,7 +68,8 @@ class PPI{
             .append('g')
             .attr('transform', `translate(${this.margin.left},0)`);
 
-        this.interactive_property = this.select_elem.node().value;
+        //this.interactive_property = this.select_elem.node().value;
+        this.interactive_property = -1;
 
         this.color_domain = [
             0, 1

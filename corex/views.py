@@ -48,9 +48,15 @@ def interactome_explorer(request):
     "get the networks"
     network = Protein_network.objects.all()
     "get the kernels"
-    kernel = Kernel.objects.all()
+    kernel = Kernel.objects.all().order_by('-kernel_name')
     form = UploadFileForm()
-    return render(request, template_name='prueba.html', context={'networks':network, 'kernels': kernel, 'form': form})
+    return render(request, 
+                  template_name='prueba.html', 
+                  context={
+                      'networks':network, 
+                      'kernels': kernel, 
+                      'form': form}
+                  )
 
 def get_network(network, proteins):
     net = {}
