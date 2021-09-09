@@ -346,6 +346,7 @@ class PPI{
         var force = -20 * proportion;
 
         this.colorScale.domain(this.color_domain);
+        this.drugColorScale.domain(this.drug_color_domain);
 
         this.simulation = d3.forceSimulation(this.graph.nodes)
             .force("link", d3.forceLink(this.graph.links).id(d => d.id))
