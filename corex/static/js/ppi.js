@@ -159,26 +159,25 @@ class PPI{
 
     }
 
-    plot_drug_colbar(){
+    update_drug_colbar(){
         //this function will plot the colorbar for the currently selected drug.
-
-    }
-
-    init_scores(){
-        var max_score = drugs.max;
-        this.color_domain = [0, max_score * 0.25, max_score * 0.5, max_score];
-        
-        var drug_min_score = d3.min(scores, d => d.score);
-        var drug_max_score = d3.max(scores, d => d.score);
-        var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25
-        var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5
-        var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75
+        var drug_min_score = d3.min(this.graph.nodes, d => d[this.interactive_property]);
+        var drug_max_score = d3.max(this.graph.nodes, d => d[this.interactive_property]);
+        var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25;
+        var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5;
+        var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75;
         this.drug_color_domain = [
             drug_min_score, 
             drug_low_quartile,
             drug_middle,
             drug_high_quartile,
             drug_max_score];
+    }
+
+    init_scores(){
+        var max_score = drugs.max;
+        this.color_domain = [0, max_score * 0.25, max_score * 0.5, max_score];
+        
         // this.load_drug_score(this.interactive_property, `/static/data/${this.interactive_property}.json`);
         var score_name = this.interactive_property;
         this.graph.nodes.map(d => {
@@ -189,6 +188,8 @@ class PPI{
                 d[score_name] = 0;
             }
         });
+
+        this.update_drug_colbar();
         
     }
 
@@ -254,18 +255,7 @@ class PPI{
         //     d3.max(this.graph.nodes.map(d=> d[this.interactive_property]))
         // ];
 
-        var drug_min_score = d3.min(this.graph.nodes, d => d[this.interactive_property]);
-        var drug_max_score = d3.max(this.graph.nodes, d => d[this.interactive_property]);
-        var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25;
-        var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5;
-        var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75;
-        this.drug_color_domain = [
-            drug_min_score, 
-            drug_low_quartile,
-            drug_middle,
-            drug_high_quartile,
-            drug_max_score];
-        console.log(this.drug_color_domain);
+        this.update_drug_colbar();
 
         //shuffle nodes a little bit
         var m = 20 * this.radius;
