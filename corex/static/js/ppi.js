@@ -44,6 +44,10 @@ class PPI{
             .exponent(0.41)
             .range(this.color_range);
 
+        this.drugColorScale = d3.scalePow()
+            .exponent(0.41)
+            .range(['#ddd', 'green', 'yellow', 'orange','red']);
+
         this.radius = 10;
         
 
@@ -77,10 +81,10 @@ class PPI{
 
         this.init_scores();
         this.plot_graph();
-        this.plot_colorbar();
+        this.plot_colorbars();
     }
 
-    plot_colorbar(){
+    plot_colorbars(){
         this.color_defs = this.color_svg.append('defs');
         this.colorbar_gradient = this.color_defs.append('linearGradient')
             .attr('id', 'colorbar-gradient')
@@ -115,11 +119,63 @@ class PPI{
             .attr('class', 'color-axis');
 
         this.color_axis.call(d3.axisBottom(this.color_axis_scale));
+
+        //drug specific colorbar
+        this.drug_colorbar_gradient = this.color_defs.append('linearGradient')
+            .attr('id', 'drug-colorbar-gradient')
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "100%")
+            .attr("y2", "0%")
+            .selectAll("stop")
+            .data(this.drug_color_domain)
+            .enter()
+            .append('stop')
+            //.attr('offset',(d,i) => `${i/(this.color_domain.length - 1) * 100}%`)
+            .attr('offset',(d,i) => `${d/d3.max(this.color_domain) * 100}%`)
+            .attr('stop-color', d => this.colorScale(d));
+
+        this.drug_colorbar = this.color_svg.append("rect")
+            .attr("class", "legendRect")
+            .attr("x", 0)
+            .attr("y", 20)
+            .attr("width", this.width)
+            .attr("height", 15)
+            .style("fill", "url(#drug-colorbar-gradient)");
+
+        this.drug_color_axis_scale = d3.scaleLinear()
+            .range([0, this.width])
+            .domain([
+                d3.min(this.drug_color_domain),
+                d3.max(this.drug_color_domain)
+            ]); 
+        this.color_axis = this.color_svg.append('g')
+            .attr('transform', `translate(0, 15)`)
+            .attr('class', 'color-axis');
+
+        this.color_axis.call(d3.axisBottom(this.drug_color_axis_scale));
+
+    }
+
+    plot_drug_colbar(){
+        //this function will plot the colorbar for the currently selected drug.
+
     }
 
     init_scores(){
         var max_score = drugs.max;
         this.color_domain = [0, max_score * 0.25, max_score * 0.5, max_score];
+        var drug_min_score = d3.min(scores, d => d.score);
+        var drug_max_score = d3.max(scores, d => d.score);
+        var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25
+        var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5
+        var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75
+        this.drug_color_domain = [
+            drug_min_score, 
+            drug_low_quartile,
+            drug_middle,
+            drug_high_quartile,
+            drug_max_score];
         // this.load_drug_score(this.interactive_property, `/static/data/${this.interactive_property}.json`);
         var score_name = this.interactive_property;
         this.graph.nodes.map(d => {
@@ -194,6 +250,18 @@ class PPI{
         //     d3.min(this.graph.nodes.map(d=> d[this.interactive_property])),
         //     d3.max(this.graph.nodes.map(d=> d[this.interactive_property]))
         // ];
+
+        var drug_min_score = d3.min(scores, d => d.score);
+        var drug_max_score = d3.max(scores, d => d.score);
+        var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25
+        var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5
+        var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75
+        this.drug_color_domain = [
+            drug_min_score, 
+            drug_low_quartile,
+            drug_middle,
+            drug_high_quartile,
+            drug_max_score];
 
         //shuffle nodes a little bit
         var m = 20 * this.radius;
