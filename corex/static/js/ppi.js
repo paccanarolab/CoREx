@@ -85,39 +85,39 @@ class PPI{
 
     plot_colorbars(){
         this.color_defs = this.color_svg.append('defs');
-        this.colorbar_gradient = this.color_defs.append('linearGradient')
-            .attr('id', 'colorbar-gradient')
-            .attr("x1", "0%")
-            .attr("y1", "0%")
-            .attr("x2", "100%")
-            .attr("y2", "0%")
-            .selectAll("stop")
-            .data(this.color_domain)
-            .enter()
-            .append('stop')
-            //.attr('offset',(d,i) => `${i/(this.color_domain.length - 1) * 100}%`)
-            .attr('offset',(d,i) => `${d/d3.max(this.color_domain) * 100}%`)
-            .attr('stop-color', d => this.colorScale(d));
+        // this.colorbar_gradient = this.color_defs.append('linearGradient')
+        //     .attr('id', 'colorbar-gradient')
+        //     .attr("x1", "0%")
+        //     .attr("y1", "0%")
+        //     .attr("x2", "100%")
+        //     .attr("y2", "0%")
+        //     .selectAll("stop")
+        //     .data(this.color_domain)
+        //     .enter()
+        //     .append('stop')
+        //     //.attr('offset',(d,i) => `${i/(this.color_domain.length - 1) * 100}%`)
+        //     .attr('offset',(d,i) => `${d/d3.max(this.color_domain) * 100}%`)
+        //     .attr('stop-color', d => this.colorScale(d));
             
-        this.colorbar = this.color_svg.append("rect")
-            .attr("class", "legendRect")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("width", this.width)
-            .attr("height", 15)
-            .style("fill", "url(#colorbar-gradient)");
+        // this.colorbar = this.color_svg.append("rect")
+        //     .attr("class", "legendRect")
+        //     .attr("x", 0)
+        //     .attr("y", 0)
+        //     .attr("width", this.width)
+        //     .attr("height", 15)
+        //     .style("fill", "url(#colorbar-gradient)");
 
-        this.color_axis_scale = d3.scaleLinear()
-            .range([0, this.width])
-            .domain([
-                d3.min(this.color_domain),
-                d3.max(this.color_domain)
-            ]); 
-        this.color_axis = this.color_svg.append('g')
-            .attr('transform', `translate(0, 15)`)
-            .attr('class', 'color-axis');
+        // this.color_axis_scale = d3.scaleLinear()
+        //     .range([0, this.width])
+        //     .domain([
+        //         d3.min(this.color_domain),
+        //         d3.max(this.color_domain)
+        //     ]); 
+        // this.color_axis = this.color_svg.append('g')
+        //     .attr('transform', `translate(0, 15)`)
+        //     .attr('class', 'color-axis');
 
-        this.color_axis.call(d3.axisBottom(this.color_axis_scale));
+        // this.color_axis.call(d3.axisBottom(this.color_axis_scale));
 
         //drug specific colorbar
         this.drug_colorbar_gradient = this.color_defs.append('linearGradient')
@@ -280,10 +280,10 @@ class PPI{
         this.colorScale.domain(this.color_domain);
         this.drugColorScale.domain(this.drug_color_domain);
         
-        this.color_axis
-            .transition()
-            .duration(1000)
-            .call(d3.axisBottom(this.color_axis_scale));
+        // this.color_axis
+        //     .transition()
+        //     .duration(1000)
+        //     .call(d3.axisBottom(this.color_axis_scale));
             
         this.drug_color_axis
             .transition()
