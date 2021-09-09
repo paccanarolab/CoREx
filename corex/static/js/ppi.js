@@ -278,12 +278,24 @@ class PPI{
             d3.min(this.color_domain),
             d3.max(this.color_domain)
         ]);
+
+        this.drug_color_axis_scale.domain([
+            d3.min(this.drug_color_domain),
+            d3.max(this.drug_color_domain)
+        ]);
+
         this.colorScale.domain(this.color_domain);
+        this.drugColorScale.domain(this.drug_color_domain);
+        
         this.color_axis
             .transition()
             .duration(1000)
             .call(d3.axisBottom(this.color_axis_scale));
             
+        this.drug_color_axis
+            .transition()
+            .duration(1000)
+            .call(d3.axisBottom(this.drug_color_axis_scale));
 
         this.node.select(".node").transition()
             .duration(1000)
