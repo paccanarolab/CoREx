@@ -138,7 +138,7 @@ class PPI{
         this.drug_colorbar = this.color_svg.append("rect")
             .attr("class", "legendRect")
             .attr("x", 0)
-            .attr("y", 25)
+            .attr("y", 40)
             .attr("width", this.width)
             .attr("height", 15)
             .style("fill", "url(#drug-colorbar-gradient)");
