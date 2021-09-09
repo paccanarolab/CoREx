@@ -297,7 +297,7 @@ class PPI{
         this.drug_color_axis
             .transition()
             .duration(1000)
-            .call(d3.axisBottom(this.drug_color_axis_scale));
+            .call(d3.axisBottom(this.drug_color_axis_scale).ticks(5));
 
         this.node.select(".node").transition()
             .duration(1000)
