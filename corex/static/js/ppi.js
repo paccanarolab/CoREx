@@ -45,8 +45,8 @@ class PPI{
             .range(this.color_range);
 
         this.drugColorScale = d3.scalePow()
-            .exponent(0.41)
-            .range(['#ddd', "steelblue", 'gold', 'orange','crimson']);
+            .exponent(0.21)
+            .range(['#ddd', "#23CB87", 'gold', 'orange','crimson']);
 
         this.radius = 10;
         
