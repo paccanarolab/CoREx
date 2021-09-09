@@ -150,7 +150,7 @@ class PPI{
                 d3.max(this.drug_color_domain)
             ]); 
         this.drug_color_axis = this.color_svg.append('g')
-            .attr('transform', `translate(0, 15)`)
+            .attr('transform', `translate(0, 35)`)
             .attr('class', 'color-axis');
 
         this.drug_color_axis.call(d3.axisBottom(this.drug_color_axis_scale));
@@ -393,7 +393,7 @@ class PPI{
             .attr("stroke", "#222")
             .attr("stroke-width",3)
             .attr("d", this.symbols.type(d3.symbolCircle))
-            .attr('fill', d => this.colorScale(d[this.interactive_property]))
+            .attr('fill', d => this.drugColorScale(d[this.interactive_property]))
             .attr('transform', d=>`translate(${d.x},${d.y})`)
             .attr("id", d => `node-${this.complex_id}-${d.id}`);
         
