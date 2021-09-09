@@ -155,7 +155,7 @@ class PPI{
             .attr('transform', `translate(0, 65)`)
             .attr('class', 'color-axis');
 
-        this.drug_color_axis.call(d3.axisBottom(this.drug_color_axis_scale));
+        this.drug_color_axis.call(d3.axisBottom(this.drug_color_axis_scale).ticks(5));
 
     }
 
