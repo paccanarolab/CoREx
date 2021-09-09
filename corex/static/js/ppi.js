@@ -299,7 +299,7 @@ class PPI{
 
         this.node.select(".node").transition()
             .duration(1000)
-            .attr('fill', d => this.colorScale(d[this.interactive_property]));
+            .attr('fill', d => this.drugColorScale(d[this.interactive_property]));
     }
 
     dragstarted(d) {
