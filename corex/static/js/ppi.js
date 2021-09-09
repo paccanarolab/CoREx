@@ -148,12 +148,12 @@ class PPI{
             .domain([
                 d3.min(this.drug_color_domain),
                 d3.max(this.drug_color_domain)
-            ]); 
+            ]).tickFormat(d3.format(".1e")); 
         this.drug_color_axis = this.color_svg.append('g')
             .attr('transform', `translate(0, 65)`)
             .attr('class', 'color-axis');
 
-        this.drug_color_axis.call(d3.axisBottom(this.drug_color_axis_scale));//.tickFormat(d3.format(".1e"));
+        this.drug_color_axis.call(d3.axisBottom(this.drug_color_axis_scale));
 
     }
 
