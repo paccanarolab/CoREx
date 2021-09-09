@@ -265,6 +265,7 @@ class PPI{
             drug_middle,
             drug_high_quartile,
             drug_max_score];
+        console.log(this.drug_color_domain);
 
         //shuffle nodes a little bit
         var m = 20 * this.radius;
