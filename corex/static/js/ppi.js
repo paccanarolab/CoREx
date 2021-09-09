@@ -143,12 +143,14 @@ class PPI{
             .attr("height", 15)
             .style("fill", "url(#drug-colorbar-gradient)");
 
-        this.drug_color_axis_scale = d3.scaleLinear()
-            .range([0, this.width])
-            .domain([
-                d3.min(this.drug_color_domain),
-                d3.max(this.drug_color_domain)
-            ]).tickFormat(d3.format(".1e")); 
+        this.drug_color_axis_scale = d3.scaleLinear();
+
+        this.drug_color_axis_scale.range([0, this.width]);
+        this.drug_color_axis_scale.tickFormat(d3.format(".1e"));
+        this.drug_color_axis_scale.domain([
+            d3.min(this.drug_color_domain),
+            d3.max(this.drug_color_domain)
+        ]); 
         this.drug_color_axis = this.color_svg.append('g')
             .attr('transform', `translate(0, 65)`)
             .attr('class', 'color-axis');
