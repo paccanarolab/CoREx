@@ -131,7 +131,7 @@ class PPI{
             .enter()
             .append('stop')
             //.attr('offset',(d,i) => `${i/(this.color_domain.length - 1) * 100}%`)
-            .attr('offset',(d,i) => `${d/(d3.max(this.drug_color_domain) - d3.min(this.drug_color_domain)) * 100}%`)
+            .attr('offset',(d,i) => `${(d - d3.min(this.drug_color_domain))/(d3.max(this.drug_color_domain) - d3.min(this.drug_color_domain)) * 100}%`)
             .attr('stop-color', d => this.drugColorScale(d));
 
         this.drug_colorbar = this.color_svg.append("rect")
