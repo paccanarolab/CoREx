@@ -68,7 +68,7 @@ class PPI{
 
 
         this.color_svg = this.container.append('svg')
-            .attr('viewBox', `0 0 ${this.totWidth} 50`)
+            .attr('viewBox', `0 0 ${this.totWidth} 150`)
             .append('g')
             .attr('transform', `translate(${this.margin.left},0)`);
 
@@ -251,8 +251,8 @@ class PPI{
         //     d3.max(this.graph.nodes.map(d=> d[this.interactive_property]))
         // ];
 
-        var drug_min_score = d3.min(scores, d => d.score);
-        var drug_max_score = d3.max(scores, d => d.score);
+        var drug_min_score = d3.min(this.graph.nodes, d => d[this.interactive_property]);
+        var drug_max_score = d3.max(this.graph.nodes, d => d[this.interactive_property]);
         var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25
         var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5
         var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75
