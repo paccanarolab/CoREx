@@ -167,6 +167,7 @@ class PPI{
     init_scores(){
         var max_score = drugs.max;
         this.color_domain = [0, max_score * 0.25, max_score * 0.5, max_score];
+        
         var drug_min_score = d3.min(scores, d => d.score);
         var drug_max_score = d3.max(scores, d => d.score);
         var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25
@@ -255,9 +256,9 @@ class PPI{
 
         var drug_min_score = d3.min(this.graph.nodes, d => d[this.interactive_property]);
         var drug_max_score = d3.max(this.graph.nodes, d => d[this.interactive_property]);
-        var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25
-        var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5
-        var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75
+        var drug_low_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.25;
+        var drug_middle = drug_min_score + (drug_max_score - drug_min_score) * 0.5;
+        var drug_high_quartile = drug_min_score + (drug_max_score - drug_min_score) * 0.75;
         this.drug_color_domain = [
             drug_min_score, 
             drug_low_quartile,
@@ -349,6 +350,7 @@ class PPI{
 
         this.colorScale.domain(this.color_domain);
         this.drugColorScale.domain(this.drug_color_domain);
+        console.log(this.drug_color_domain);
 
         this.simulation = d3.forceSimulation(this.graph.nodes)
             .force("link", d3.forceLink(this.graph.links).id(d => d.id))
